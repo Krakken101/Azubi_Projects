@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# Personal Record Management System
+
+# File to store records
+RECORD_FILE="records.txt"
+
+# Function to display the main menu
+display_menu() {
+    clear
+    echo "Personal Record Management System"
+    echo "1. Add a new record"
+    echo "2. Edit existing records"
+    echo "3. Search for specific records"
+    echo "4. Generate reports"
+    echo "5. Create backups"
+    echo "6. Generate passwords"
+    echo "7. Exit"
+    echo "Enter your choice: "
+}
+
+# Function to add a new record
+add_record() {
+    clear
+    echo "Adding a new record..."
+    read -p "Enter name: " name
+    read -p "Enter age: " age
+    echo "$name:$age" >> "$RECORD_FILE"
+    echo "Record added successfully!"
+}
+
+# Function to edit existing records
+edit_records() {
+    clear
+    echo "Editing existing records..."
+    read -p "Enter the name of the record you want to edit: " name
+    # Assuming each record is stored as "name:age", you can edit the age here.
+    sed -i "/^$name:/d" "$RECORD_FILE"
+    read -p "Enter the new age for $name: " new_age
+    echo "$name:$new_age" >> "$RECORD_FILE"
+    echo "Record edited successfully!"
+}
+
+# Function to search for specific records
+search_records() {
+    clear
+    echo "Searching for specific records..."
+    read -p "Enter the name of the record you want to search for: " name
+    grep "^$name:" "$RECORD_FILE" || echo "Record not found"
+}
+
+# Function to generate reports
+generate_reports() {
+    clear
+    echo "Generating reports..."
+    # Example of generating a report
+    echo "Total number of records: $(wc -l < "$RECORD_FILE")"
+}
+
+# Function to create backups
+create_backups() {
+    clear
+    echo "Creating backups..."
+    cp "$RECORD_FILE" "backup_$(date +"%Y%m%d_%H%M%S").txt"
+    echo "Backup created successfully!"
+}
+
+# Function to generate passwords
+generate_passwords() {
+    clear
+    echo "Generating passwords..."
+    pwgen -s 12 1  # Generates a random password with 12 characters
+}
+
+# Main program loop
+while true; do
+    display_menu
+    read choice
+    case $choice in
+        1) add_record ;;
+        2) edit_records ;;
+        3) search_records ;;
+        4) generate_reports ;;
+        5) create_backups ;;
+        6) generate_passwords ;;
+        7) echo "Exiting..."; break ;;
+        *) echo "Invalid choice. Please enter a number between 1 and 7." ;;
+    esac
+    read -n 1 -s -r -p "Press any key to continue..."
+done
